@@ -1,0 +1,66 @@
+Option Explicit
+
+Dim reglas As Object ' Diccionario para almacenar las reglas
+
+' ?? Cargar reglas desde JSON al abrir el formulario
+Private Sub UserForm_Initialize()
+    Dim jsonText As String
+    Dim jsonParsed As Object
+    Dim jsonFile As String
+
+    ' Ruta del archivo JSON (AJUSTA SEGÚN SEA NECESARIO)
+    jsonFile = "C:\Users\USER\Documents\proyectos\a11y-autocomplete-VBAexcel\es.json"
+
+    ' Leer JSON en UTF-8
+    jsonText = LeerArchivoUTF8(jsonFile)
+
+    ' Verificar si el archivo se leyó correctamente
+    If jsonText = "" Then
+        MsgBox "No se pudo leer el archivo JSON.", vbCritical, "Error"
+        Exit Sub
+    End If
+
+    ' Convertir JSON a objeto
+    Set jsonParsed = JsonConverter.ParseJson(jsonText)
+
+    ' Verificar si tiene el campo "rules"
+    If jsonParsed.Exists("rules") Then
+        Set reglas = jsonParsed("rules")
+    Else
+        MsgBox "El archivo JSON no contiene reglas.", vbCritical, "Error"
+        Exit Sub
+    End If
+End Sub
+
+' ?? Filtrar reglas en tiempo real cuando el usuario escribe en txtBuscar
+Private Sub txtBuscar_Change()
+    Dim clave As Variant
+    Dim filtro As String
+    filtro = LCase(txtBuscar.Text) ' Convertir a minúsculas para coincidencia flexible
+
+    ' Limpiar ListBox antes de actualizar
+    lstResultados.Clear
+
+    ' Recorrer las claves del diccionario "rules"
+    For Each clave In reglas.Keys
+        If InStr(1, LCase(reglas(clave)("description")), filtro) > 0 Then
+            lstResultados.AddItem clave & ": " & reglas(clave)("description")
+        End If
+    Next clave
+End Sub
+
+' ? Insertar la regla seleccionada en la celda activa
+Private Sub cmdInsertar_Click()
+    If lstResultados.ListIndex <> -1 Then
+        ActiveCell.Value = lstResultados.List(lstResultados.ListIndex)
+        Unload Me
+    Else
+        MsgBox "Por favor, selecciona una regla de la lista.", vbExclamation, "Atención"
+    End If
+End Sub
+
+' ? Cerrar el formulario
+Private Sub cmdCerrar_Click()
+    Unload Me
+End Sub
+

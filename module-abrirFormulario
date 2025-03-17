@@ -1,0 +1,19 @@
+Sub AbrirFormulario()
+    UserForm1.Show
+End Sub
+
+Function LeerArchivoUTF8(ruta As String) As String
+    Dim stream As Object
+    Set stream = CreateObject("ADODB.Stream")
+
+    On Error Resume Next
+    stream.Type = 2  ' Tipo de datos texto
+    stream.Charset = "UTF-8"  ' Forzar lectura en UTF-8
+    stream.Open
+    stream.LoadFromFile ruta
+
+    LeerArchivoUTF8 = stream.ReadText
+    stream.Close
+    Set stream = Nothing
+    On Error GoTo 0
+End Function
