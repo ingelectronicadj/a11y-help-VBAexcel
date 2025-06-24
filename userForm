@@ -9,7 +9,7 @@ Private Sub UserForm_Initialize()
     Dim jsonFile As String
 
     ' Ruta del archivo JSON (AJUSTA SEGÚN SEA NECESARIO)
-    jsonFile = "C:\Users\USER\Documents\proyectos\a11y-autocomplete-VBAexcel\es.json"
+    jsonFile = "C:\Users\USER\Documents\proyectos\a11y-help-VBAexcel\es.json"
 
     ' Leer JSON en UTF-8
     jsonText = LeerArchivoUTF8(jsonFile)
@@ -30,16 +30,22 @@ Private Sub UserForm_Initialize()
         MsgBox "El archivo JSON no contiene reglas.", vbCritical, "Error"
         Exit Sub
     End If
+
+    ' Seleccionar por defecto la opción "Comportamiento esperado"
+    optEsperado.Value = True
 End Sub
 
 ' ?? Filtrar reglas en tiempo real cuando el usuario escribe en txtBuscar
 Private Sub txtBuscar_Change()
     Dim clave As Variant
     Dim filtro As String
-    filtro = LCase(txtBuscar.Text) ' Convertir a minúsculas para coincidencia flexible
+    filtro = LCase(txtBuscar.Text)
 
     ' Limpiar ListBox antes de actualizar
     lstResultados.Clear
+
+    ' Mostrar coincidencias solo si está seleccionada la opción de comportamiento esperado
+    If Not optEsperado.Value Then Exit Sub
 
     ' Recorrer las claves del diccionario "rules"
     For Each clave In reglas.Keys
@@ -49,10 +55,21 @@ Private Sub txtBuscar_Change()
     Next clave
 End Sub
 
-' ? Insertar la regla seleccionada en la celda activa
+' ? Insertar solo la descripción en la celda activa
 Private Sub cmdInsertar_Click()
     If lstResultados.ListIndex <> -1 Then
-        ActiveCell.Value = lstResultados.List(lstResultados.ListIndex)
+        Dim seleccion As String
+        Dim partes() As String
+
+        seleccion = lstResultados.List(lstResultados.ListIndex)
+        partes = Split(seleccion, ": ", 2)
+
+        If UBound(partes) = 1 Then
+            ActiveCell.Value = partes(1) ' Solo la descripción
+        Else
+            ActiveCell.Value = seleccion ' Fallback si no hay separación
+        End If
+
         Unload Me
     Else
         MsgBox "Por favor, selecciona una regla de la lista.", vbExclamation, "Atención"
