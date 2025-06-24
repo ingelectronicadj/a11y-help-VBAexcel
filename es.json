@@ -429,22 +429,11 @@
     },
     "aria-allowed-attr": {
       "pass": "Los atributos ARIA se usan correctamente para el rol definido",
-      "fail": {
-        "singular": "En ARIA, atributos no están permitidos : ${data.values}",
-        "plural": "En ARIA, atributono está permitido : ${data.values}"
-      },
-      "incomplete": "Compruebe que no hay ningún problema si se ignora el atributo ARIA para este elemento: ${data.values}"
+      "fail": "En ARIA, atributos no permitidos: ${data.values}"
     },
     "aria-allowed-role": {
       "pass": "El rol ARIA está permitido para el elemento proporcionado",
-      "fail": {
-        "singular": "En ARIA, roles ${data.values} no están permitidos para el elemento proporcionado",
-        "plural": "En ARIA, role ${data.values}  no está permitido para el elemento proporcionado"
-      },
-      "incomplete": {
-        "singular": "En ARIA, hay que eliminar roles ${data.values} cuando el elemento se haga visible, ya que no están permitidos para el elemento",
-        "plural": "En ARIA, hay que eliminar role ${data.values} cuando el elemento se haga visible, ya que no está permitido para el elemento"
-      }
+      "fail": "En ARIA, roles no permitidos para el elemento: ${data.values}"
     },
     "aria-busy": {
       "pass": "El elemento tiene un atributo aria-busy.",
@@ -452,23 +441,11 @@
     },
     "aria-conditional-attr": {
       "pass": "Se permite el atributo ARIA.",
-      "fail": {
-        "checkbox": "Elimine aria-checked o ajústelo a \"${data.checkState}\" para que se corresponda con el estado real de la casilla de verificación.",
-        "rowSingular": "Este atributo es compatible con las filas, pero no con ${data.ownerRole}: ${data.invalidAttrs}.",
-        "rowPlural": "Estos atributos son compatibles con las filas, pero no con ${data.ownerRole}: ${data.invalidAttrs}"
-      }
+      "fail": "Atributo no permitido o inconsistente con el rol: ${data.invalidAttrs} / ${data.ownerRole} / ${data.checkState}"
     },
     "aria-errormessage": {
       "pass": "Usa una técnica admitida para aria-errormessage",
-      "fail": {
-        "singular": "En aria-errormessage, valores  ${data.values}`, se debe usar una técnica para anunciar el mensaje (p. ej., aria-live, aria-describedby, role=alert, etc.)",
-        "plural": "En aria-errormessage, valor  ${data.values}`, se debe usar una técnica para anunciar el mensaje (p. ej., aria-live, aria-describedby, role=alert, etc.)"
-      },
-      "incomplete": {
-        "singular": "Asegura que el valor `${data.values}` de aria-errormessage se refiere a un elemento existente.",
-        "plural": "Garantiza que los valores de aria-errormessage `${data.values}` se refieren a elementos existentes.",
-        "idrefs": "No se ha podido determinar si el elemento aria-errormessage existe en la página: ${data.values}"
-      }
+      "fail": "aria-errormessage requiere técnica para anunciar mensaje: ${data.values}"
     },
     "aria-hidden-body": {
       "pass": "No hay ningún atributo aria-hidden presente en el 'body' del documento",
@@ -476,49 +453,23 @@
     },
     "aria-level": {
       "pass": "Los valores de aria-level son válidos",
-      "incomplete": "Los valores de aria-level superiores a 6 no son compatibles con todas las combinaciones de lectores de pantalla y navegadores"
+      "fail": "Valores de aria-level no compatibles con lectores de pantalla o navegadores"
     },
     "aria-prohibited-attr": {
       "pass": "El atributo ARIA está permitido",
-      "fail": {
-        "hasRolePlural": "Los atributos ${data.prohibited} no pueden utilizarse con el rol \"${data.role}\".",
-        "hasRoleSingular": "El atributo ${data.prohibited} no puede utilizarse con el rol \"${data.role}\".",
-        "noRolePlural": "Los atributos ${data.prohibited} no se pueden utilizar en ${data.nodeName} sin un atributo de rol válido.",
-        "noRoleSingular": "El atributo ${data.prohibited} no se puede utilizar en ${data.nodeName} sin un atributo de rol válido."
-      },
-      "incomplete": {
-        "hasRoleSingular": "El atributo ${data.prohibited} no está bien soportado por el rol \"${data.role}\".",
-        "hasRolePlural": "Los atributos ${data.prohibited} no están bien soportados por el rol \"${data.role}\".",
-        "noRoleSingular": "El atributo ${data.prohibited} no está bien soportado para ${data.nodeName} sin un atributo role válido.",
-        "noRolePlural": "Los atributos ${data.prohibited} no están bien soportados para ${data.nodeName} sin un atributo role válido."
-      }
+      "fail": "Atributo ARIA prohibido para el rol o sin rol válido: ${data.prohibited} / ${data.role} / ${data.nodeName}"
     },
     "aria-required-attr": {
       "pass": "Todos los atributos ARIA requeridos están presentes",
-      "fail": {
-        "singular": "Atributos requeridos no presentes: ${data.values}",
-        "plural": "Atributo requerido no presente: ${data.values}"
-      }
+      "fail": "Atributos ARIA requeridos no presentes: ${data.values}"
     },
     "aria-required-children": {
-      "pass": {
-        "default": "Los hijos ARIA requeridos están presentes"
-      },
-      "fail": {
-        "singular": "Rol de hijos requerido en ARIA no presente: ${data.values}",
-        "plural": "Rol de hijo requerido en ARIA no presente: ${data.values}"
-      },
-      "incomplete": {
-        "singular": "Esperando que se añada rol ARIA para hijos: ${data.values}",
-        "plural": "Esperando que se añada rol ARIA para hijo: ${data.values}"
-      }
+      "pass": "Los hijos ARIA requeridos están presentes",
+      "fail": "Rol de hijos requerido en ARIA no presente: ${data.values}"
     },
     "aria-required-parent": {
       "pass": "Rol de padre requerido en ARIA presente",
-      "fail": {
-        "singular": "Rol de ARIA requerido para padre s no presente: ${data.values}",
-        "plural": "Rol de ARIA requerido para padre  no presente: ${data.values}"
-      }
+      "fail": "Rol de ARIA requerido para padre no presente: ${data.values}"
     },
     "has-widget-role": {
       "pass": "El elemento tiene un rol de widget.",
@@ -534,32 +485,19 @@
     },
     "no-implicit-explicit-label": {
       "pass": "No hay discordancia entre un <label> y el nombre accesible",
-      "incomplete": "Comprobar que el <label> no necesita ser parte del ARIA ${data} para el nombre del campo"
+      "fail": "Posible discordancia entre <label> y el nombre accesible: revisar ARIA ${data}"
     },
     "unsupportedrole": {
       "pass": "El rol ARIA está admitido",
-      "fail": "El rol usado no está ampliamente admitido en lectores de pantalla y tecnologías de apoyo:  ${data.values}"
+      "fail": "El rol usado no está ampliamente admitido por tecnologías de apoyo: ${data.values}"
     },
     "aria-valid-attr-value": {
       "pass": "Los valores de los atributos ARIA son válidos",
-      "fail": {
-        "singular": "Valores no válidos para atributo ARIA: ${data.values}",
-        "plural": "Valor no válido para atributo ARIA: ${data.values}"
-      },
-      "incomplete": {
-        "singular": "Atributos ARIA ID de elemento no existe en la página: ${data.values}",
-        "plural": "Atributo ARIA ID de elemento no existe en la página: ${data.values}"
-      }
+      "fail": "Valores no válidos o referencias inexistentes para atributos ARIA: ${data.values}"
     },
     "aria-valid-attr": {
-      "pass": {
-        "singular": "Nombre de atributo ARIA válido",
-        "plural": "Nombres de atributos ARIA válidos"
-      },
-      "fail": {
-        "singular": "Nombre de atributos ARIA no válido:  ${data.values}",
-        "plural": "Nombres de atributos ARIA no válidos:  ${data.values}"
-      }
+      "pass": "Nombres de atributos ARIA válidos",
+      "fail": "Nombres de atributos ARIA no válidos: ${data.values}"
     },
     "valid-scrollable-semantics": {
       "pass": "El elemento tiene una semántica válida para un elemento en orden de foco.",
@@ -567,85 +505,51 @@
     },
     "color-contrast": {
       "pass": "El elemento tiene un contraste de color suficiente de ${data.contrastRatio}",
-      "fail": "El elemento tiene un contraste de color insuficiente de ${data.contrastRatio} (color de primer plano: ${data.fgColor}, color de fondo: ${data.bgColor}, tamaño de fuente: ${data.fontSize}, grosor de fuente: ${data.fontWeight}). Ratio de contraste esperado: ${data.expectedContrastRatio}",
-      "incomplete": {
-        "bgImage": "El color de fondo del elemento no se pudo determinar debido a una imagen de fondo",
-        "bgGradient": "El color de fondo del elemento no se pudo determinar debido a un degradado de fondo",
-        "imgNode": "El color de fondo del elemento no se pudo determinar porque el elemento contiene un nodo de imagen",
-        "bgOverlap": "El color de fondo no se pudo determinar porque tiene otro elemento superpuesto",
-        "fgAlpha": "El color de fondo no se pudo determinar debido a una transparencia alfa",
-        "elmPartiallyObscured": "El color de fondo no se pudo determinar porque está parcialmente oculto por otro elemento",
-        "elmPartiallyObscuring": "El color de fondo del elemento no se pudo determinar porque se superpone parcialmente a otros elementos",
-        "outsideViewport": "El color de fondo del elemento no se pudo determinar porque está fuera de la ventana gráfica ('viewport')",
-        "equalRatio": "El elemento tiene una ratio de contraste 1:1 con el fondo",
-        "shortTextContent": "El contenido del elemento es demasiado corto para determinar si es contenido de texto propiamente dicho",
-        "default": "Imposible determinar la ratio de contraste"
-      }
+      "fail": "Contraste de color insuficiente (${data.contrastRatio}), fg: ${data.fgColor}, bg: ${data.bgColor}, tamaño fuente: ${data.fontSize}, peso fuente: ${data.fontWeight}, ratio esperado: ${data.expectedContrastRatio}"
     },
     "color-contrast-enhanced": {
       "pass": "El elemento tiene un contraste de color suficiente de ${data.contrastRatio}",
-      "fail": "El elemento tiene un contraste de color insuficiente de ${data.contrastRatio} (color de primer plano: ${data.fgColor}, color de fondo: ${data.bgColor}, tamaño de fuente: ${data.fontSize}, grosor de fuente: ${data.fontWeight}). Ratio de contraste esperado: ${data.expectedContrastRatio}",
-      "incomplete": {
-        "bgImage": "El color de fondo del elemento no se pudo determinar debido a una imagen de fondo",
-        "bgGradient": "El color de fondo del elemento no se pudo determinar debido a un degradado de fondo",
-        "imgNode": "El color de fondo del elemento no se pudo determinar porque el elemento contiene un nodo de imagen",
-        "bgOverlap": "El color de fondo no se pudo determinar porque tiene otro elemento superpuesto",
-        "fgAlpha": "El color de fondo no se pudo determinar debido a una transparencia alfa",
-        "elmPartiallyObscured": "El color de fondo no se pudo determinar porque está parcialmente oculto por otro elemento",
-        "elmPartiallyObscuring": "El color de fondo del elemento no se pudo determinar porque se superpone parcialmente a otros elementos",
-        "outsideViewport": "El color de fondo del elemento no se pudo determinar porque está fuera de la ventana gráfica ('viewport')",
-        "equalRatio": "El elemento tiene una ratio de contraste 1:1 con el fondo",
-        "shortTextContent": "El contenido del elemento es demasiado corto para determinar si es contenido de texto propiamente dicho",
-        "default": "Imposible determinar la ratio de contraste"
-      }
+      "fail": "Contraste de color insuficiente (${data.contrastRatio}), fg: ${data.fgColor}, bg: ${data.bgColor}, tamaño fuente: ${data.fontSize}, peso fuente: ${data.fontWeight}, ratio esperado: ${data.expectedContrastRatio}"
     },
     "link-in-text-block": {
-      "pass": "Los enlaces se pueden distinguir respecto al texto adyacente de forma ajena al color",
-      "fail": "Es necesario distinguir los enlaces respecto al texto adyacente de una forma ajena al color",
-      "incomplete": {
-        "bgContrast": "No se pudo determinar la ratio de contraste del elemento. Comprobar si existe un estilo hover/focus distinto",
-        "bgImage": "La ratio de contraste del elemento no se pudo determinar debido a una imagen de fondo",
-        "bgGradient": "La ratio de contraste del elemento no se pudo determinar debido a un degradado de fondo",
-        "imgNode": "La ratio de contraste del elemento no se pudo determinar porque el elemento contiene un nodo de imagen",
-        "bgOverlap": "La ratio de contraste del elemento no se pudo determinar debido a superposición de elementos",
-        "default": "Imposible determinar la ratio de contraste"
-      }
+      "pass": "Los enlaces se distinguen del texto adyacente por medios distintos al color",
+      "fail": "Los enlaces deben distinguirse del texto adyacente por medios distintos al color"
     },
     "autocomplete-appropriate": {
-      "pass": "el valor de autocomplete está en un elemento apropiado",
-      "fail": "el valor de autocomplete es inapropiado para este tipo de input"
+      "pass": "El valor de autocomplete está en un elemento apropiado",
+      "fail": "El valor de autocomplete es inapropiado para este tipo de input"
     },
     "autocomplete-valid": {
-      "pass": "el atributo autocomplete está formateado correctamente",
-      "fail": "el atributo autocomplete está formateado incorrectamente"
+      "pass": "El atributo autocomplete está formateado correctamente",
+      "fail": "El atributo autocomplete está formateado incorrectamente"
     },
     "accesskeys": {
       "pass": "El valor del atributo accesskey es único",
-      "fail": "El documento tiene múltiples elementos con el mismo accesskey"
+      "fail": "Hay múltiples elementos con el mismo accesskey"
     },
     "focusable-content": {
       "pass": "El elemento contiene elementos que admiten el foco",
-      "fail": "El elemento debería tener contenido que admita el foco"
+      "fail": "El elemento debería contener contenido que admita el foco"
     },
     "focusable-disabled": {
-      "pass": "Dentro del elemento no hay elementos que admitan el foco",
-      "fail": "El contenido que admita el foco debería ser desactivado o eliminado del DOM"
+      "pass": "No hay elementos activables dentro del elemento",
+      "fail": "El contenido activable debe desactivarse o eliminarse del DOM"
     },
     "focusable-element": {
       "pass": "El elemento admite el foco",
       "fail": "El elemento debería admitir el foco"
     },
     "focusable-no-name": {
-      "pass": "El elemento no está en orden de tabulación o tiene texto accesible",
+      "pass": "El elemento tiene texto accesible o no está en orden de tabulación",
       "fail": "El elemento está en orden de tabulación y no tiene texto accesible"
     },
     "focusable-not-tabbable": {
-      "pass": "Dentro del elemento no hay elementos que admitan el foco",
-      "fail": "El contenido que admita el foco debería tener tabindex='-1' o ser eliminado del DOM"
+      "pass": "El contenido que admite foco no está en el orden de tabulación",
+      "fail": "El contenido que admite foco debe tener tabindex='-1' o ser eliminado"
     },
     "landmark-is-top-level": {
-      "pass": "El punto de referencia ${data.role} está en el nivel superior.",
-      "fail": "El punto de referencia ${data.role} está contenido en otro punto de referencia."
+      "pass": "El punto de referencia ${data.role} está en el nivel superior",
+      "fail": "El punto de referencia ${data.role} está contenido en otro punto de referencia"
     },
     "page-has-heading-one": {
       "pass": "La página tiene al menos un encabezado de nivel 1",
@@ -656,280 +560,190 @@
       "fail": "El documento no tiene punto de referencia main"
     },
     "page-no-duplicate-banner": {
-      "pass": "El documento no tiene más de un punto de referencia banner",
+      "pass": "No hay más de un banner en el documento",
       "fail": "El documento tiene más de un punto de referencia banner"
     },
     "page-no-duplicate-contentinfo": {
-      "pass": "El documento no tiene más de un punto de referencia contentinfo",
+      "pass": "No hay más de un contentinfo en el documento",
       "fail": "El documento tiene más de un punto de referencia contentinfo"
     },
     "page-no-duplicate-main": {
-      "pass": "El documento no tiene más de un punto de referencia main",
+      "pass": "No hay más de un main en el documento",
       "fail": "El documento tiene más de un punto de referencia main"
     },
     "tabindex": {
-      "pass": "El elemento no tiene un tabindex mayor que 0",
-      "fail": "El elemento tiene un tabindex mayor que 0"
+      "pass": "El elemento no tiene tabindex mayor que 0",
+      "fail": "El elemento tiene tabindex mayor que 0"
     },
     "alt-space-value": {
-      "pass": "El elemento tiene un valor válido para el atributo alt",
-      "fail": "El elemento tiene un atributo alt que contiene solo un carácter de espacio, que no es ignorado por todos los lectores de pantalla"
+      "pass": "El valor del atributo alt es válido",
+      "fail": "El atributo alt contiene solo un espacio, lo cual no es ignorado por todos los lectores"
     },
     "duplicate-img-label": {
-      "pass": "El elemento no duplica texto existente en el texto alternativo de <img>",
-      "fail": "El elemento contiene un elemento <img> con texto alternativo que duplica texto existente"
+      "pass": "No se duplica el texto del alt en el texto adyacente",
+      "fail": "El <img> duplica texto adyacente en su atributo alt"
     },
     "explicit-label": {
-      "pass": "El elemento de formulario tiene un <label> explícito",
-      "fail": "El elemento de formulario no tiene un <label> explícito"
+      "pass": "El formulario tiene un <label> explícito",
+      "fail": "El formulario no tiene un <label> explícito"
     },
     "help-same-as-label": {
-      "pass": "El texto de ayuda (title o aria-describedby) no duplica el texto de label",
-      "fail": "El texto de ayuda (title o aria-describedby) es el mismo que el texto de label"
+      "pass": "El texto de ayuda no duplica el texto del label",
+      "fail": "El texto de ayuda es el mismo que el texto del label"
     },
     "hidden-explicit-label": {
-      "pass": "El elemento de formulario tiene un <label> explícito visible",
-      "fail": "El elemento de formulario tiene un <label> explícito oculto"
+      "pass": "El <label> explícito del formulario es visible",
+      "fail": "El <label> explícito del formulario está oculto"
     },
     "implicit-label": {
-      "pass": "El elemento de formulario tiene un <label> implícito ('envuelto')",
-      "fail": "El elemento de formulario no tiene un <label> implícito ('envuelto')"
+      "pass": "El formulario tiene un <label> implícito (envuelto)",
+      "fail": "El formulario no tiene un <label> implícito (envuelto)"
     },
     "label-content-name-mismatch": {
-      "pass": "El elemento contiene texto visible como parte de su nombre accesible",
-      "fail": "El texto contenido en el elemento no está incluido en el nombre accesible"
+      "pass": "El texto visible está incluido en el nombre accesible",
+      "fail": "El texto visible no está incluido en el nombre accesible"
     },
     "multiple-label": {
-      "pass": "El campo de formulario no tiene múltiples elementos label",
-      "fail": "Múltiples elementos label no son ampliamente admitidos en las tecnologías de apoyo"
+      "pass": "El formulario no tiene múltiples <label>",
+      "fail": "Múltiples <label> no son ampliamente admitidos por tecnologías de apoyo"
     },
     "title-only": {
-      "pass": "El elemento de formulario no usa únicamente el atributo title para su etiqueta",
-      "fail": "Solo se usó title para generar la etiqueta de un elemento de formulario"
+      "pass": "No se usa solo title como etiqueta",
+      "fail": "Solo se usó title para etiquetar el formulario"
     },
     "landmark-is-unique": {
-      "pass": "Los puntos de referencia deben tener una combinación única de role o role/label/title (es decir, un nombre accesible único)",
-      "fail": "El punto de referencia debe tener un aria-label, aria-labelledby o title único para que los puntos de referencia sean distinguibles"
+      "pass": "Los puntos de referencia tienen un nombre accesible único",
+      "fail": "El punto de referencia debe tener un nombre accesible único (aria-label, aria-labelledby o title)"
     },
     "has-lang": {
       "pass": "El elemento <html> tiene un atributo lang",
       "fail": "El elemento <html> no tiene un atributo lang"
     },
     "valid-lang": {
-      "pass": "El valor del atributo lang está incluido en la lista de idiomas válidos",
-      "fail": "Valor del atributo lang no incluido en la lista de idiomas válidos"
+      "pass": "El valor del atributo lang está en la lista de idiomas válidos",
+      "fail": "El valor del atributo lang no es válido"
     },
     "xml-lang-mismatch": {
-      "pass": "Los atributos lang y xml:lang tienen el mismo idioma base",
-      "fail": "Los atributos lang y xml:lang no tienen el mismo idioma base"
+      "pass": "lang y xml:lang tienen el mismo idioma base",
+      "fail": "lang y xml:lang no tienen el mismo idioma base"
     },
     "dlitem": {
-      "pass": "El elemento de lista de descripción tiene un elemento <dl> padre",
-      "fail": "El elemento de lista de descripción no tiene un elemento <dl> padre"
+      "pass": "El ítem de la lista de descripción tiene un <dl> padre",
+      "fail": "El ítem de la lista de descripción no tiene un <dl> padre"
     },
     "listitem": {
-      "pass": "El elemento de lista tiene un elemento padre <ul>, <ol> o role=\"list\"",
-      "fail": "El elemento de lista no tiene un elemento padre <ul>, <ol> o role=\"list\""
-    },
-    "only-dlitems": {
-      "pass": "El elemento de lista solo tiene hijos directos que están permitidos dentro de elementos <dt> o <dd>",
-      "fail": "El elemento de lista tiene hijos directos que no están permitidos dentro de elementos <dt> o <dd>"
-    },
-    "only-listitems": {
-      "pass": "El elemento de lista solo tiene hijos directos que están permitidos dentro de elementos <li>",
-      "fail": "El elemento de lista tiene hijos directos que no están permitidos dentro de elementos <li>"
-    },
-    "structured-dlitems": {
-      "pass": "Cuando no está vacío, el elemento tiene tanto elementos <dt> como <dd>",
-      "fail": "Cuando no está vacío, el elemento no tiene al menos un elemento <dt> seguido por, al menos, un elemento <dd>"
-    },
-    "caption": {
-      "pass": "El elemento multimedia tiene una pista de subtítulos",
-      "incomplete": "Comprobar que hay disponibles subtítulos para el elemento"
-    },
-    "frame-tested": {
-      "pass": "El marco incorporado fue probado con axe-core",
-      "fail": "El marco incorporado no se pudo probar con axe-core",
-      "incomplete": "El marco incorporado aún tiene que probarse con axe-core"
-    },
-    "css-orientation-lock": {
-      "pass": "La pantalla es manejable y no existe bloqueo de orientación",
-      "fail": "Se aplica bloqueo de orientación CSS y hace que la pantalla sea inmanejable",
-      "incomplete": "No se puede determinar  si hay bloqueo de orientación CSS"
-    },
-    "meta-viewport-large": {
-      "pass": "La etiqueta <meta> no impide un zum significativo en dispositivos móviles",
-      "fail": "La etiqueta <meta> limita el zum en dispositivos móviles"
-    },
-    "meta-viewport": {
-      "pass": "La etiqueta <meta> no impide el zum en dispositivos móviles",
-      "fail": "${data} en la etiqueta <meta> impide el zum en dispositivos móviles"
-    },
-    "header-present": {
-      "pass": "La página tiene un 'header'",
-      "fail": "La página no tiene un 'header'"
-    },
-    "heading-order": {
-      "pass": "Horden de encabezados válido",
-      "fail": "Orden de encabezados no válido"
-    },
-    "internal-link-present": {
-      "pass": "Encontrado enlace de salto ('skip') válido",
-      "fail": "No se han encontrado enlaces de salto ('skip') válidos"
-    },
-    "landmark": {
-      "pass": "La página tiene una región punto de referencia",
-      "fail": "La página no tiene una región punto de referencia"
-    },
-    "meta-refresh": {
-      "pass": "La etiqueta <meta> no refresca la página inmediatamente",
-      "fail": "La etiqueta <meta> fuerza el refresco programado de la página"
-    },
-    "p-as-heading": {
-      "pass": "Los elementos <p> no se han diseñado como encabezados",
-      "fail": "Deberían usarse elementos de encabezado en vez de elementos <p> con estilos"
-    },
-    "region": {
-      "pass": "Todo el contenido de la página está incluido en puntos de referencia",
-      "fail": "La página tiene contenido no incluido en puntos de referencia"
-    },
-    "skip-link": {
-      "pass": "Existe el destino del enlace de salto ('skip')",
-      "incomplete": "El destino del enlace de salto ('skip') debería volverse visible en la activación",
-      "fail": "No hay destino para el enlace de salto ('skip')"
-    },
-    "unique-frame-title": {
-      "pass": "El atributo title del elemento es único",
-      "fail": "El atributo title del elemento no es único"
-    },
-    "duplicate-id-active": {
-      "pass": "El documento no tiene elementos activos que compartan el mismo atributo id",
-      "fail": "El documento tiene elementos activos con el mismo atributo id: ${data}"
-    },
-    "duplicate-id-aria": {
-      "pass": "El documento no tiene elementos referidos con ARIA o etiquetas que compartan el mismo atributo id",
-      "fail": "El documento tiene múltiples elementos referidos con ARIA con el mismo atributo id: ${data}"
-    },
-    "duplicate-id": {
-      "pass": "El documento no tiene elementos estáticos que compartan el mismo atributo id",
-      "fail": "El documento tiene múltiples elementos estáticos con el mismo atributo id"
-    },
-    "aria-label": {
-      "pass": "El atributo aria-label existe y no está vacío",
-      "fail": "El atributo aria-label no existe o está vacío"
-    },
-    "aria-labelledby": {
-      "pass": "El atributo aria-labelledby existe y hace referencia a elementos visibles para lectores de pantalla",
-      "fail": "El atributo aria-labelledby no existe, hace referencia a elementos inexistentes o hace referencia a elementos vacíos"
-    },
-    "avoid-inline-spacing": {
-      "pass": "No se han especificado estilos 'inline' con '!important' que afecten al espaciado de texto",
-      "fail": {
-        "singular": "Eliminar '!important' de inline styles ${data.values}, porque su anulación no está admitida en la mayoría de navegadores",
-        "plural": "Eliminar '!important' de inline style ${data.values}, porque su anulación no está admitida en la mayoría de navegadores"
-      }
-    },
-    "button-has-visible-text": {
-      "pass": "El elemento tiene texto interno visible para lectores de pantalla",
-      "fail": "El elemento no tiene texto interno visible para lectores de pantalla"
-    },
-    "doc-has-title": {
-      "pass": "El documento tiene un elemento <title> no vacío",
-      "fail": "El documento no tiene un elemento <title> no vacío"
-    },
-    "exists": {
-      "pass": "El elemento no existe",
-      "fail": "El elemento existe"
-    },
-    "has-alt": {
-      "pass": "El elemento tiene un atributo alt",
-      "fail": "El elemento no tiene un atributo alt"
-    },
-    "has-visible-text": {
-      "pass": "El elemento tiene texto visible para lectores de pantalla",
-      "fail": "El elemento no tiene texto visible para lectores de pantalla"
-    },
-    "is-on-screen": {
-      "pass": "El elemento no es visible",
-      "fail": "El elemento es visible"
-    },
-    "non-empty-alt": {
-      "pass": "El elemento tiene un atributo alt no vacío",
-      "fail": "El elemento no tiene atributo alt o el atributo alt está vacío"
-    },
-    "non-empty-if-present": {
-      "pass": {
-        "default": "El elemento no tiene un atributo de valor",
-        "has-label": "El elemento tiene un atributo de valor no vacío"
-      },
-      "fail": "El elemento tiene un atributo de valor y el atributo de valor está vacío"
-    },
-    "non-empty-title": {
-      "pass": "El elemento tiene un atributo title",
-      "fail": "El elemento no tiene atributo title o el atributo title está vacío"
-    },
-    "non-empty-value": {
-      "pass": "El elemento tiene un atributo de valor no vacío",
-      "fail": "El elemento no tiene un atributo de valor o el atributo de valor está vacío"
-    },
-    "presentational-role": {
-      "pass": "La semántica por defecto del elemento se ha sustituido por role=\"${data.role}\"",
-      "fail": {
-        "default": "La semántica por defecto del elemento no se ha anulado con role=\"none\" o role=\"presentation\"",
-        "globalAria": "La función del elemento no es de presentación porque tiene un atributo ARIA global",
-        "focusable": "La función del elemento no es de presentación porque es enfocable",
-        "both": "La función del elemento no es de presentación porque tiene un atributo ARIA global y es enfocable",
-        "iframe": "El uso del atributo \"title\" en un elemento ${data.nodeName} con una función de presentación no es coherente entre los lectores de pantalla"
-      }
-    },
-    "role-none": {
-      "pass": "La semántica predeterminada del elemento se anuló mediante role=\"none\"",
-      "fail": "La semántica predeterminada del elemento no se anuló mediante role=\"none\""
-    },
-    "role-presentation": {
-      "pass": "La semántica predeterminada del elemento se anuló mediante role=\"presentation\"",
-      "fail": "La semántica predeterminada del elemento no se anuló mediante role=\"presentation\""
-    },
-    "svg-non-empty-title": {
-      "pass": "El elemento tiene un hijo que es un título",
-      "fail": "El elemento no tiene un hijo que sea un título o la etiqueta de título esta vacia",
-      "incomplete": "No se puede determinar si el elemento tiene un hijo que sea un título"
-    },
-    "caption-faked": {
-      "pass": "La primera fila de una tabla no se usa como título ('caption')",
-      "fail": "La primera fila de la tabla debería ser un título ('caption') en vez de una celda de tabla"
-    },
-    "html5-scope": {
-      "pass": "El atributo scope solo se usa en elementos de encabezados de tabla (<th>)",
-      "fail": "En HTML 5, los atributos scope solo se pueden usar en elementos de encabezados de tabla (<th>)"
-    },
-    "same-caption-summary": {
-      "pass": "El contenido del atributo summary y de <caption> no están duplicados",
-      "fail": "El contenido del atributo summary y del elemento <caption> son idénticos"
-    },
-    "scope-value": {
-      "pass": "El atributo scope se usa correctamente",
-      "fail": "El valor del atributo scope solo puede ser 'row' o 'col'"
-    },
-    "td-has-header": {
-      "pass": "Todas las celdas de datos no vacías tienen encabezados de tabla",
-      "fail": "Algunas celdas de datos no vacías no tienen encabezados de tabla"
-    },
-    "td-headers-attr": {
-      "pass": "El atributo headers se usa exclusivamente para hacer referencia a otras celdas de la tabla",
-      "fail": "El atributo headers no se usa exclusivamente para hacer referencia a otras celdas de la tabla"
-    },
-    "th-has-data-cells": {
-      "pass": "Todas las celdas de encabezados de tabla hacen referencia a celdas de datos",
-      "fail": "No todas las celdas de encabezados de tabla hacen referencia a celdas de datos",
-      "incomplete": "Hay celdas de datos de la tabla ausentes o vacías"
-    },
-    "hidden-content": {
-      "pass": "Se ha analizado todo el contenido de la página.",
-      "fail": "Hubo problemas al analizar el contenido de esta página.",
-      "incomplete": "Hay contenido oculto en la página que no fue analizado. Necesitarás activar la visualización de este contenido a fin de analizarlo."
-    }
+    "pass": "El elemento de lista tiene un elemento padre <ul>, <ol> o role=\"list\"",
+    "fail": "El elemento de lista no tiene un elemento padre <ul>, <ol> o role=\"list\""
   },
+  "only-dlitems": {
+    "pass": "El elemento de lista solo tiene hijos directos que están permitidos dentro de elementos <dt> o <dd>",
+    "fail": "El elemento de lista tiene hijos directos que no están permitidos dentro de elementos <dt> o <dd>"
+  },
+  "only-listitems": {
+    "pass": "El elemento de lista solo tiene hijos directos que están permitidos dentro de elementos <li>",
+    "fail": "El elemento de lista tiene hijos directos que no están permitidos dentro de elementos <li>"
+  },
+  "structured-dlitems": {
+    "pass": "Cuando no está vacío, el elemento tiene tanto elementos <dt> como <dd>",
+    "fail": "Cuando no está vacío, el elemento no tiene al menos un elemento <dt> seguido por, al menos, un elemento <dd>"
+  },
+  "caption": {
+    "pass": "El elemento multimedia tiene una pista de subtítulos",
+    "fail": "No se detectaron subtítulos para el elemento multimedia"
+  },
+  "frame-tested": {
+    "pass": "El marco incorporado fue probado con axe-core",
+    "fail": "El marco incorporado no se pudo probar con axe-core"
+  },
+  "css-orientation-lock": {
+    "pass": "La pantalla es manejable y no existe bloqueo de orientación",
+    "fail": "Se aplica bloqueo de orientación CSS y hace que la pantalla sea inmanejable"
+  },
+  "meta-viewport-large": {
+    "pass": "La etiqueta <meta> no impide un zum significativo en dispositivos móviles",
+    "fail": "La etiqueta <meta> limita el zum en dispositivos móviles"
+  },
+  "meta-viewport": {
+    "pass": "La etiqueta <meta> no impide el zum en dispositivos móviles",
+    "fail": "La etiqueta <meta> impide el zum en dispositivos móviles"
+  },
+  "header-present": {
+    "pass": "La página tiene un 'header'",
+    "fail": "La página no tiene un 'header'"
+  },
+  "heading-order": {
+    "pass": "Horden de encabezados válido",
+    "fail": "Orden de encabezados no válido"
+  },
+  "internal-link-present": {
+    "pass": "Encontrado enlace de salto ('skip') válido",
+    "fail": "No se han encontrado enlaces de salto ('skip') válidos"
+  },
+  "landmark": {
+    "pass": "La página tiene una región punto de referencia",
+    "fail": "La página no tiene una región punto de referencia"
+  },
+  "meta-refresh": {
+    "pass": "La etiqueta <meta> no refresca la página inmediatamente",
+    "fail": "La etiqueta <meta> fuerza el refresco programado de la página"
+  },
+  "p-as-heading": {
+    "pass": "Los elementos <p> no se han diseñado como encabezados",
+    "fail": "Deberían usarse elementos de encabezado en vez de elementos <p> con estilos"
+  },
+  "region": {
+    "pass": "Todo el contenido de la página está incluido en puntos de referencia",
+    "fail": "La página tiene contenido no incluido en puntos de referencia"
+  },
+  "skip-link": {
+    "pass": "Existe el destino del enlace de salto ('skip')",
+    "fail": "No hay destino para el enlace de salto ('skip')"
+  },
+  "unique-frame-title": {
+    "pass": "El atributo title del elemento es único",
+    "fail": "El atributo title del elemento no es único"
+  },
+  "duplicate-id-active": {
+    "pass": "El documento no tiene elementos activos que compartan el mismo atributo id",
+    "fail": "El documento tiene elementos activos con el mismo atributo id"
+  },
+  "duplicate-id-aria": {
+    "pass": "El documento no tiene elementos referidos con ARIA o etiquetas que compartan el mismo atributo id",
+    "fail": "El documento tiene múltiples elementos referidos con ARIA con el mismo atributo id"
+  },
+  "duplicate-id": {
+    "pass": "El documento no tiene elementos estáticos que compartan el mismo atributo id",
+    "fail": "El documento tiene múltiples elementos estáticos con el mismo atributo id"
+  },
+  "aria-label": {
+    "pass": "El atributo aria-label existe y no está vacío",
+    "fail": "El atributo aria-label no existe o está vacío"
+  },
+  "aria-labelledby": {
+    "pass": "El atributo aria-labelledby existe y hace referencia a elementos visibles para lectores de pantalla",
+    "fail": "El atributo aria-labelledby no existe, hace referencia a elementos inexistentes o hace referencia a elementos vacíos"
+  },
+  "button-has-visible-text": {
+    "pass": "El elemento tiene texto interno visible para lectores de pantalla",
+    "fail": "El elemento no tiene texto interno visible para lectores de pantalla"
+  },
+  "doc-has-title": {
+    "pass": "El documento tiene un elemento <title> no vacío",
+    "fail": "El documento no tiene un elemento <title> no vacío"
+  },
+  "exists": {
+    "pass": "El elemento no existe",
+    "fail": "El elemento existe"
+  },
+  "has-alt": {
+    "pass": "El elemento tiene un atributo alt",
+    "fail": "El elemento no tiene un atributo alt"
+  },
+  "has-visible-text": {
+    "pass": "El elemento tiene texto visible para lectores de pantalla",
+    "fail": "El elemento no tiene texto visible para lectores de pantalla"
+  }
+},
   "failureSummaries": {
     "any": {
       "failureMessage": "Corregir cualquiera de las siguientes incidencias:{{~it:value}}\n  {{=value.split('\\n').join('\\n  ')}}{{~}}"

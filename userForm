@@ -1,8 +1,13 @@
 Option Explicit
 
 Dim reglas As Object ' Diccionario para almacenar las reglas
+Dim checks As Object ' Diccionario para almacenar los checks
 
-' ?? Cargar reglas desde JSON al abrir el formulario
+Private Sub optCorrecta_Click()
+
+End Sub
+
+' Cargar reglas y checks desde JSON al abrir el formulario
 Private Sub UserForm_Initialize()
     Dim jsonText As String
     Dim jsonParsed As Object
@@ -23,7 +28,7 @@ Private Sub UserForm_Initialize()
     ' Convertir JSON a objeto
     Set jsonParsed = JsonConverter.ParseJson(jsonText)
 
-    ' Verificar si tiene el campo "rules"
+    ' Verificar campos "rules" y "checks"
     If jsonParsed.Exists("rules") Then
         Set reglas = jsonParsed("rules")
     Else
@@ -31,31 +36,53 @@ Private Sub UserForm_Initialize()
         Exit Sub
     End If
 
+    If jsonParsed.Exists("checks") Then
+        Set checks = jsonParsed("checks")
+    Else
+        MsgBox "El archivo JSON no contiene checks.", vbCritical, "Error"
+        Exit Sub
+    End If
+
     ' Seleccionar por defecto la opción "Comportamiento esperado"
     optEsperado.Value = True
 End Sub
 
-' ?? Filtrar reglas en tiempo real cuando el usuario escribe en txtBuscar
+' Filtrar resultados en tiempo real
 Private Sub txtBuscar_Change()
     Dim clave As Variant
     Dim filtro As String
     filtro = LCase(txtBuscar.Text)
 
-    ' Limpiar ListBox antes de actualizar
     lstResultados.Clear
 
-    ' Mostrar coincidencias solo si está seleccionada la opción de comportamiento esperado
-    If Not optEsperado.Value Then Exit Sub
-
-    ' Recorrer las claves del diccionario "rules"
-    For Each clave In reglas.Keys
-        If InStr(1, LCase(reglas(clave)("description")), filtro) > 0 Then
-            lstResultados.AddItem clave & ": " & reglas(clave)("description")
-        End If
-    Next clave
+    If optEsperado.Value Then
+        For Each clave In reglas.Keys
+            If reglas(clave).Exists("description") Then
+                If InStr(1, LCase(reglas(clave)("description")), filtro) > 0 Then
+                    lstResultados.AddItem clave & ": " & reglas(clave)("description")
+                End If
+            End If
+        Next clave
+    ElseIf optCorrecto.Value Then
+        For Each clave In checks.Keys
+            If checks(clave).Exists("pass") Then
+                If InStr(1, LCase(checks(clave)("pass")), filtro) > 0 Then
+                    lstResultados.AddItem clave & ": " & checks(clave)("pass")
+                End If
+            End If
+        Next clave
+    ElseIf optIncorrecto.Value Then
+        For Each clave In checks.Keys
+            If checks(clave).Exists("fail") Then
+                If InStr(1, LCase(checks(clave)("fail")), filtro) > 0 Then
+                    lstResultados.AddItem clave & ": " & checks(clave)("fail")
+                End If
+            End If
+        Next clave
+    End If
 End Sub
 
-' ? Insertar solo la descripción en la celda activa
+' Insertar el texto seleccionado en la celda activa
 Private Sub cmdInsertar_Click()
     If lstResultados.ListIndex <> -1 Then
         Dim seleccion As String
@@ -65,9 +92,9 @@ Private Sub cmdInsertar_Click()
         partes = Split(seleccion, ": ", 2)
 
         If UBound(partes) = 1 Then
-            ActiveCell.Value = partes(1) ' Solo la descripción
+            ActiveCell.Value = partes(1)
         Else
-            ActiveCell.Value = seleccion ' Fallback si no hay separación
+            ActiveCell.Value = seleccion
         End If
 
         Unload Me
@@ -76,8 +103,20 @@ Private Sub cmdInsertar_Click()
     End If
 End Sub
 
-' ? Cerrar el formulario
+' Cerrar el formulario
 Private Sub cmdCerrar_Click()
     Unload Me
 End Sub
 
+' Para que la búsqueda se actualice automáticamente cuando el usuario cambie entre los botones de opción
+Private Sub optEsperado_Click()
+    Call txtBuscar_Change
+End Sub
+
+Private Sub optCorrecto_Click()
+    Call txtBuscar_Change
+End Sub
+
+Private Sub optIncorrecto_Click()
+    Call txtBuscar_Change
+End Sub
