@@ -18,8 +18,8 @@
       "help": "ARIA role debe ser apropiado para el elemento"
     },
     "aria-braille-equivalent": {
-      "description": "Garantiza que aria-braillelabel y aria-brailleroledescription tengan un equivalente no braille..",
-      "help": "los atributos aria-braille deben tener un equivalente no braille."
+      "description": "Garantiza que aria-braillelabel y aria-brailleroledescription tengan un equivalente no braille.",
+      "help": "Los atributos aria-braille deben tener un equivalente no braille."
     },
     "aria-command-name": {
       "description": "Garantiza que cada botón, enlace y elemento de menú ARIA tenga un nombre accesible.",
@@ -78,6 +78,8 @@
       "help": "Utilice aria-roledescription para los elementos con un rol semántico."
     },
     "aria-unsupported-attr": {
+      "description": "Garantiza que los atributos ARIA están ampliamente admitidos en lectores de pantalla y tecnologías de apoyo.",
+      "help": "Los atributos ARIA deben estar admitidos por las tecnologías de apoyo",
       "pass": "El atributo ARIA está admitido",
       "fail": "El atributo ARIA no está ampliamente admitido en lectores de pantalla y tecnologías de apoyo:  ${data.values}"
     },

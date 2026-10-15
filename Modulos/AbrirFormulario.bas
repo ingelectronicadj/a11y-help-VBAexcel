@@ -1,0 +1,116 @@
+Attribute VB_Name = "AbrirFormulario"
+Option Explicit
+
+Public Const URL_JSON_REMOTO As String = "https://raw.githubusercontent.com/ingelectronicadj/a11y-help-VBAexcel/main/es.json"
+
+Private gCatalogoCache As Object
+
+' Abre el formulario principal del asistente de accesibilidad
+Public Sub AbrirFormulario()
+    UserForm1.Show
+End Sub
+
+' Permite forzar la recarga del archivo JSON limpiando la caché en memoria
+Public Sub RecargarCatalogoJSON()
+    Set gCatalogoCache = Nothing
+    MsgBox "La caché de reglas de accesibilidad se ha limpiado correctamente.", vbInformation, "A11y-Help"
+End Sub
+
+' Obtiene el diccionario JSON parseado (desde caché, carpeta local del libro, nube o selector manual)
+Public Function ObtenerCatalogoA11y() As Object
+    If Not gCatalogoCache Is Nothing Then
+        Set ObtenerCatalogoA11y = gCatalogoCache
+        Exit Function
+    End If
+
+    Dim jsonText As String
+    Dim rutaLocal As String
+
+    ' 1. Intentar cargar es.json desde la misma carpeta del archivo Excel (.xlsm)
+    If ThisWorkbook.Path <> "" Then
+        rutaLocal = ThisWorkbook.Path & Application.PathSeparator & "es.json"
+        If Dir(rutaLocal) <> "" Then
+            jsonText = LeerArchivoUTF8(rutaLocal)
+        End If
+    End If
+
+    ' 2. Si no se encontró localmente, intentar descargarlo desde el repositorio en GitHub
+    If Len(Trim$(jsonText)) = 0 Then
+        jsonText = DescargarJSONRemoto(URL_JSON_REMOTO)
+    End If
+
+    ' 3. Si tampoco hubo conexión o archivo local, permitir seleccionarlo manualmente sin tocar código VBA
+    If Len(Trim$(jsonText)) = 0 Then
+        Dim rutaSeleccionada As Variant
+        MsgBox "No se encontró 'es.json' junto al archivo Excel ni fue posible descargarlo." & vbCrLf & _
+               "Por favor, selecciona el archivo 'es.json' en la siguiente ventana.", vbInformation, "A11y-Help"
+        rutaSeleccionada = Application.GetOpenFilename("Archivos JSON (*.json), *.json", , "Seleccionar archivo es.json de reglas de accesibilidad")
+        If VarType(rutaSeleccionada) = vbBoolean Then
+            Exit Function
+        End If
+        jsonText = LeerArchivoUTF8(CStr(rutaSeleccionada))
+    End If
+
+    If Len(Trim$(jsonText)) = 0 Then
+        Exit Function
+    End If
+
+    On Error GoTo ErrorParseo
+    Set gCatalogoCache = JsonConverter.ParseJson(jsonText)
+    Set ObtenerCatalogoA11y = gCatalogoCache
+    Exit Function
+
+ErrorParseo:
+    MsgBox "Error al procesar el archivo JSON: " & Err.Description, vbCritical, "Error de formato JSON"
+    Set ObtenerCatalogoA11y = Nothing
+End Function
+
+' Lee un archivo en codificación UTF-8 (ADODB.Stream en Windows con respaldo binario)
+Public Function LeerArchivoUTF8(ByVal ruta As String) As String
+    On Error GoTo FallbackLectura
+    Dim stream As Object
+    Set stream = CreateObject("ADODB.Stream")
+
+    stream.Type = 2          ' adTypeText
+    stream.Charset = "UTF-8" ' Forzar lectura en UTF-8
+    stream.Open
+    stream.LoadFromFile ruta
+
+    LeerArchivoUTF8 = stream.ReadText
+    stream.Close
+    Set stream = Nothing
+    Exit Function
+
+FallbackLectura:
+    On Error Resume Next
+    Dim numArchivo As Integer
+    Dim contenido As String
+    numArchivo = FreeFile
+    Open ruta For Input As #numArchivo
+    contenido = Input$(LOF(numArchivo), numArchivo)
+    Close #numArchivo
+    LeerArchivoUTF8 = contenido
+    On Error GoTo 0
+End Function
+
+' Descarga el catálogo JSON desde una URL remota (HTTPS)
+Public Function DescargarJSONRemoto(ByVal url As String) As String
+    On Error GoTo FalloDescarga
+    Dim http As Object
+    Set http = CreateObject("MSXML2.XMLHTTP")
+
+    http.Open "GET", url, False
+    http.setRequestHeader "Accept", "application/json"
+    http.send
+
+    If http.Status = 200 Then
+        DescargarJSONRemoto = http.responseText
+    End If
+
+    Set http = Nothing
+    Exit Function
+
+FalloDescarga:
+    DescargarJSONRemoto = ""
+    On Error GoTo 0
+End Function

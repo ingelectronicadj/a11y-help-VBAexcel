@@ -1,0 +1,5 @@
+# Ignore temporary Excel lock files and OS metadata
+~$*.xls*
+*.tmp
+.DS_Store
+Thumbs.db

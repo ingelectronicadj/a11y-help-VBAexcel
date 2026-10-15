@@ -3,87 +3,129 @@ Option Explicit
 Dim reglas As Object ' Diccionario para almacenar las reglas
 Dim checks As Object ' Diccionario para almacenar los checks
 
-Private Sub optCorrecta_Click()
-
-End Sub
-
 ' Cargar reglas y checks desde JSON al abrir el formulario
 Private Sub UserForm_Initialize()
-    Dim jsonText As String
     Dim jsonParsed As Object
-    Dim jsonFile As String
 
-    ' Ruta del archivo JSON (AJUSTA SEGÚN SEA NECESARIO)
-    jsonFile = "C:\Users\USER\Documents\proyectos\a11y-help-VBAexcel\es.json"
+    ' Obtener el catálogo JSON (desde la carpeta del Excel, desde la nube o selector de archivo)
+    Set jsonParsed = ObtenerCatalogoA11y()
 
-    ' Leer JSON en UTF-8
-    jsonText = LeerArchivoUTF8(jsonFile)
-
-    ' Verificar si el archivo se leyó correctamente
-    If jsonText = "" Then
-        MsgBox "No se pudo leer el archivo JSON.", vbCritical, "Error"
+    If jsonParsed Is Nothing Then
+        MsgBox "No se pudo cargar el catálogo de reglas de accesibilidad (es.json).", vbCritical, "Error"
         Exit Sub
     End If
-
-    ' Convertir JSON a objeto
-    Set jsonParsed = JsonConverter.ParseJson(jsonText)
 
     ' Verificar campos "rules" y "checks"
     If jsonParsed.Exists("rules") Then
         Set reglas = jsonParsed("rules")
     Else
-        MsgBox "El archivo JSON no contiene reglas.", vbCritical, "Error"
+        MsgBox "El archivo JSON no contiene el nodo 'rules'.", vbCritical, "Error"
         Exit Sub
     End If
 
     If jsonParsed.Exists("checks") Then
         Set checks = jsonParsed("checks")
     Else
-        MsgBox "El archivo JSON no contiene checks.", vbCritical, "Error"
+        MsgBox "El archivo JSON no contiene el nodo 'checks'.", vbCritical, "Error"
         Exit Sub
     End If
 
-    ' Seleccionar por defecto la opción "Comportamiento esperado"
+    ' Seleccionar por defecto la opción "Comportamiento esperado" y poblar listado inicial
     optEsperado.Value = True
+    Call ActualizarResultados
 End Sub
 
-' Filtrar resultados en tiempo real
-Private Sub txtBuscar_Change()
+' Verifica si todos los términos de búsqueda (separados por espacio) coinciden en el ID, descripción o ayuda
+Private Function CoincideBusqueda(ByVal clave As String, ByVal descripcion As String, ByVal ayuda As String, ByVal filtro As String) As Boolean
+    Dim filtroLimpio As String
+    filtroLimpio = Trim$(LCase$(filtro))
+
+    If Len(filtroLimpio) = 0 Then
+        CoincideBusqueda = True
+        Exit Function
+    End If
+
+    Dim textoCompleto As String
+    textoCompleto = LCase$(clave & " " & descripcion & " " & ayuda)
+
+    Dim palabras() As String
+    Dim i As Long
+    palabras = Split(filtroLimpio, " ")
+
+    For i = LBound(palabras) To UBound(palabras)
+        If Len(palabras(i)) > 0 Then
+            If InStr(1, textoCompleto, palabras(i), vbTextCompare) = 0 Then
+                CoincideBusqueda = False
+                Exit Function
+            End If
+        End If
+    Next i
+
+    CoincideBusqueda = True
+End Function
+
+' Actualiza el listado de resultados según el filtro y el tipo de comprobación seleccionada
+Private Sub ActualizarResultados()
+    If reglas Is Nothing Or checks Is Nothing Then Exit Sub
+
     Dim clave As Variant
     Dim filtro As String
-    filtro = LCase(txtBuscar.Text)
+    Dim descTexto As String
+    Dim helpTexto As String
 
+    filtro = txtBuscar.Text
     lstResultados.Clear
 
     If optEsperado.Value Then
         For Each clave In reglas.Keys
+            descTexto = ""
+            helpTexto = ""
             If reglas(clave).Exists("description") Then
-                If InStr(1, LCase(reglas(clave)("description")), filtro) > 0 Then
-                    lstResultados.AddItem clave & ": " & reglas(clave)("description")
+                descTexto = CStr(reglas(clave)("description"))
+            End If
+            If reglas(clave).Exists("help") Then
+                helpTexto = CStr(reglas(clave)("help"))
+            End If
+
+            If Len(descTexto) > 0 Then
+                If CoincideBusqueda(CStr(clave), descTexto, helpTexto, filtro) Then
+                    lstResultados.AddItem clave & ": " & descTexto
                 End If
             End If
         Next clave
     ElseIf optCorrecto.Value Then
         For Each clave In checks.Keys
             If checks(clave).Exists("pass") Then
-                If InStr(1, LCase(checks(clave)("pass")), filtro) > 0 Then
-                    lstResultados.AddItem clave & ": " & checks(clave)("pass")
+                descTexto = CStr(checks(clave)("pass"))
+                If CoincideBusqueda(CStr(clave), descTexto, "", filtro) Then
+                    lstResultados.AddItem clave & ": " & descTexto
                 End If
             End If
         Next clave
     ElseIf optIncorrecto.Value Then
         For Each clave In checks.Keys
             If checks(clave).Exists("fail") Then
-                If InStr(1, LCase(checks(clave)("fail")), filtro) > 0 Then
-                    lstResultados.AddItem clave & ": " & checks(clave)("fail")
+                descTexto = CStr(checks(clave)("fail"))
+                If CoincideBusqueda(CStr(clave), descTexto, "", filtro) Then
+                    lstResultados.AddItem clave & ": " & descTexto
                 End If
             End If
         Next clave
     End If
+
+    ' Seleccionar automáticamente el primer elemento si hay resultados
+    If lstResultados.ListCount > 0 Then
+        lstResultados.ListIndex = 0
+    End If
+End Sub
+
+' Filtrar resultados en tiempo real al escribir
+Private Sub txtBuscar_Change()
+    Call ActualizarResultados
 End Sub
 
 ' Insertar el texto seleccionado en la celda activa
-Private Sub cmdInsertar_Click()
+Private Sub InsertarSeleccionEnCelda()
     If lstResultados.ListIndex <> -1 Then
         Dim seleccion As String
         Dim partes() As String
@@ -92,9 +134,9 @@ Private Sub cmdInsertar_Click()
         partes = Split(seleccion, ": ", 2)
 
         If UBound(partes) = 1 Then
-            ActiveCell.Value = partes(1)
+            ActiveCell.Value = Trim$(partes(1))
         Else
-            ActiveCell.Value = seleccion
+            ActiveCell.Value = Trim$(seleccion)
         End If
 
         Unload Me
@@ -103,20 +145,29 @@ Private Sub cmdInsertar_Click()
     End If
 End Sub
 
+Private Sub cmdInsertar_Click()
+    Call InsertarSeleccionEnCelda
+End Sub
+
+' Permitir insertar rápidamente haciendo doble clic sobre cualquier regla de la lista
+Private Sub lstResultados_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+    Call InsertarSeleccionEnCelda
+End Sub
+
 ' Cerrar el formulario
 Private Sub cmdCerrar_Click()
     Unload Me
 End Sub
 
-' Para que la búsqueda se actualice automáticamente cuando el usuario cambie entre los botones de opción
+' Actualizar la búsqueda automáticamente cuando el usuario cambie entre los botones de opción
 Private Sub optEsperado_Click()
-    Call txtBuscar_Change
+    Call ActualizarResultados
 End Sub
 
 Private Sub optCorrecto_Click()
-    Call txtBuscar_Change
+    Call ActualizarResultados
 End Sub
 
 Private Sub optIncorrecto_Click()
-    Call txtBuscar_Change
+    Call ActualizarResultados
 End Sub
